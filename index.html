@@ -357,6 +357,7 @@
 <div id="jspsych-target"></div>
 
 <script>
+window.addEventListener("load", function() {
 // ═══════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════
@@ -1003,8 +1004,8 @@ function downloadResults() {
 // ═══════════════════════════════════════════
 // RUN (plugins loaded in <head>)
 // ═══════════════════════════════════════════
-window.addEventListener('load', () => {
-  jsPsych.run(buildTimeline());
+jsPsych.run(buildTimeline());
+
 });
 </script>
 </body>
