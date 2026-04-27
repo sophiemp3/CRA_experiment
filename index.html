@@ -707,7 +707,10 @@ function makeTrialNode(trialData, isPractice, blockKey) {
         Motivation: post.Motivation,
         Timestamp: new Date().toISOString(),
       };
-      if (!isPractice) allResults.push(result);
+      if (!isPractice) {
+        allResults.push(result);
+        sendToSheets(result);
+      }
       window._sliderPre = {};
       window._sliderPost = {};
     },
@@ -935,7 +938,7 @@ function buildTimeline() {
       <div class="cra-screen">
         <div class="block-tag">Эксперимент завершён</div>
         <h2 class="cra-heading">Большое спасибо<br>за участие!</h2>
-        <p class="cra-body">Ваши данные сохранены. Вы можете закрыть эту страницу.<br>
+        <p class="cra-body">Ваши данные автоматически отправлены в Google Таблицу. ✅<br>
         Если вам нужен CSV с результатами — нажмите пробел.</p>
         <p class="cra-body" style="color: var(--accent); font-family: var(--font-mono); font-size: 13px;">
           Нажмите ПРОБЕЛ
@@ -949,7 +952,26 @@ function buildTimeline() {
 }
 
 // ═══════════════════════════════════════════
-// DOWNLOAD CSV
+// GOOGLE SHEETS
+// ═══════════════════════════════════════════
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxbHmn2J0WMIU4z7wgWugiuHNxVLzdBSSReXs-m9RQ431xtBS2sVEDEZE7QuxgtRiGGqQ/exec';
+
+async function sendToSheets(rowData) {
+  try {
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Google Apps Script requires no-cors
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rowData),
+    });
+    console.log('✅ Строка отправлена в Google Sheets:', rowData.Word1);
+  } catch (err) {
+    console.warn('⚠️ Не удалось отправить в Sheets, данные сохранены локально:', err);
+  }
+}
+
+// ═══════════════════════════════════════════
+// DOWNLOAD CSV (резервная копия)
 // ═══════════════════════════════════════════
 function downloadResults() {
   if (allResults.length === 0) return;
