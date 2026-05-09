@@ -1,651 +1,561 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>CRA Эксперимент</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- jsPsych библиотека -->
-    <script src="https://unpkg.com/jspsych@7.3.4"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.3"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey@0.2.1"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
-    
-    <!-- jsPsych стили -->
-    <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
-    
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-        }
-        
-        .jspsych-display-element {
-            font-size: 18px;
-        }
-        
-        .cra-words {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 50px 0;
-            text-align: center;
-        }
-        
-        .cra-prompt {
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        
-        .cra-input {
-            font-size: 28px;
-            padding: 15px;
-            width: 400px;
-            text-align: center;
-            border: 2px solid #fff;
-            background: #222;
-            color: #fff;
-        }
-        
-        .feedback {
-            font-size: 32px;
-            font-weight: bold;
-            margin: 50px 0;
-        }
-        
-        .feedback.correct {
-            color: #0f0;
-        }
-        
-        .feedback.incorrect {
-            color: #f00;
-        }
-        
-        .likert-scale {
-            margin: 30px 0;
-        }
-        
-        .instructions {
-            font-size: 20px;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: left;
-        }
-        
-        .block-message {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 50px 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRA Эксперимент</title>
+<script src="https://unpkg.com/jspsych@6.3.1/jspsych.js"></script>
+<script src="https://unpkg.com/jspsych@6.3.1/plugins/jspsych-html-keyboard-response.js"></script>
+<script src="https://unpkg.com/jspsych@6.3.1/plugins/jspsych-survey-html-form.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/jspsych@6.3.1/css/jspsych.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0c;--surface:#14141a;--border:#2a2a35;--accent:#c8f564;--accent2:#64c8f5;--text:#e8e8ec;--muted:#7a7a88;--error:#f56464;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg)!important;color:var(--text)!important;font-family:var(--sans)!important}
+.jspsych-content-wrapper{background:var(--bg)!important}
+.jspsych-content{max-width:800px!important;padding:40px 24px!important}
+.S{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;min-height:60vh;text-align:center}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.heading{font-family:var(--mono);font-size:clamp(20px,3.5vw,30px);font-weight:500;line-height:1.4;color:var(--text)}
+.body-text{font-size:15px;line-height:1.8;color:var(--muted);max-width:560px}
+.body-text strong{color:var(--text);font-weight:500}
+.hint{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+.form-grid{display:flex;flex-direction:column;gap:20px;width:100%;max-width:440px;text-align:left}
+.form-field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px}
+.form-field input,.form-field select{width:100%;background:var(--surface);border:1px solid var(--border);border-bottom:2px solid var(--accent2);color:var(--text);font-family:var(--sans);font-size:15px;padding:12px 14px;outline:none;transition:border-color .2s}
+.form-field input:focus,.form-field select:focus{border-bottom-color:var(--accent)}
+.form-field select option{background:var(--surface)}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:13px 38px;background:transparent;color:var(--accent);border:1px solid var(--accent);cursor:pointer;transition:all .18s;margin-top:8px}
+.btn:hover{background:var(--accent);color:var(--bg)}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn:disabled:hover{background:transparent;color:var(--accent)}
+.jspsych-btn{font-family:var(--mono)!important;font-size:12px!important;letter-spacing:.12em!important;text-transform:uppercase!important;padding:13px 38px!important;background:transparent!important;color:var(--accent)!important;border:1px solid var(--accent)!important;border-radius:0!important;cursor:pointer!important;transition:all .18s!important;margin-top:16px!important}
+.jspsych-btn:hover{background:var(--accent)!important;color:var(--bg)!important}
+.trial-words{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap}
+.word-box{font-family:var(--mono);font-size:clamp(22px,4vw,38px);font-weight:500;color:var(--text);padding:14px 22px;border:1px solid var(--border);background:var(--surface);letter-spacing:.03em}
+.word-sep{font-family:var(--mono);font-size:20px;color:var(--border)}
+.input-wrap{display:flex;flex-direction:column;gap:10px;align-items:center;width:100%;max-width:460px}
+.input-label{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+#cra-input{width:100%;background:var(--surface);border:1px solid var(--border);border-bottom:2px solid var(--accent);color:var(--text);font-family:var(--mono);font-size:24px;padding:14px 18px;outline:none;text-align:center;transition:border-color .2s}
+#cra-input:focus{border-bottom-color:var(--accent2)}
+.timer{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em}
+.feedback-box{padding:24px 36px;border:1px solid var(--border);background:var(--surface);font-family:var(--mono);font-size:15px;line-height:1.7;text-align:center}
+.feedback-box.ok{border-color:var(--accent)}
+.feedback-box.bad{border-color:var(--error)}
+.feedback-icon{font-size:36px;margin-bottom:12px}
+.slider-q{font-size:17px;line-height:1.6;color:var(--text);max-width:560px;text-align:center}
+.slider-wrap{width:100%;max-width:500px;display:flex;flex-direction:column;gap:12px}
+.slider-track{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.sdot{width:40px;height:40px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-family:var(--mono);font-size:14px;color:var(--muted);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.sdot:hover{border-color:var(--accent2);color:var(--text)}
+.sdot.on{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+.slider-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.block-tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:6px 18px;border:1px solid var(--accent);color:var(--accent)}
+.block-num{font-family:var(--mono);font-size:56px;color:var(--border);line-height:1;font-weight:500}
+.progress-bar{width:100%;max-width:360px;height:2px;background:var(--border)}
+.progress-fill{height:100%;background:var(--accent);transition:width .4s}
+</style>
 </head>
-<body></body>
+<body>
+<div id="exp"></div>
 <script>
+'use strict';
 
-// ==================================================================
-// ДАННЫЕ ЗАДАЧ (из твоих CSV файлов)
-// ==================================================================
-
-const TASKS_DATA = {
-    "easy_ru": [
-        {"Word1": "миллионер", "Word2": "купюра", "Word3": "сша", "corrAns": "доллар", "Language": "ru", "Difficulty": "easy"},
-        {"Word1": "крем", "Word2": "овал", "Word3": "выражение", "corrAns": "лицо", "Language": "ru", "Difficulty": "easy"},
-        {"Word1": "здоровье", "Word2": "ритм", "Word3": "приступ", "corrAns": "сердце", "Language": "ru", "Difficulty": "easy"},
-        {"Word1": "рыба", "Word2": "дробь", "Word3": "последовательность", "corrAns": "число", "Language": "ru", "Difficulty": "easy"}
-    ],
-    "medium_ru": [
-        {"Word1": "рынок", "Word2": "качество", "Word3": "оказание", "corrAns": "услуга", "Language": "ru", "Difficulty": "medium"},
-        {"Word1": "советник", "Word2": "выборы", "Word3": "республика", "corrAns": "президент", "Language": "ru", "Difficulty": "medium"},
-        {"Word1": "школа", "Word2": "буржуазия", "Word3": "неравенство", "corrAns": "класс", "Language": "ru", "Difficulty": "medium"},
-        {"Word1": "свежесть", "Word2": "закон", "Word3": "поток", "corrAns": "воздух", "Language": "ru", "Difficulty": "medium"}
-    ],
-    "hard_ru": [
-        {"Word1": "скорость", "Word2": "направление", "Word3": "траектория", "corrAns": "движение", "Language": "ru", "Difficulty": "hard"},
-        {"Word1": "рецепт", "Word2": "шкаф", "Word3": "страница", "corrAns": "книга", "Language": "ru", "Difficulty": "hard"},
-        {"Word1": "река", "Word2": "линия", "Word3": "море", "corrAns": "берег", "Language": "ru", "Difficulty": "hard"},
-        {"Word1": "поведение", "Word2": "иллюстрация", "Word3": "образец", "corrAns": "пример", "Language": "ru", "Difficulty": "hard"}
-    ],
-    "easy_en": [
-        {"Word1": "dew", "Word2": "comb", "Word3": "bee", "corrAns": "honey", "Language": "en", "Difficulty": "easy"},
-        {"Word1": "worm", "Word2": "shelf", "Word3": "end", "corrAns": "book", "Language": "en", "Difficulty": "easy"},
-        {"Word1": "cadet", "Word2": "capsule", "Word3": "ship", "corrAns": "space", "Language": "en", "Difficulty": "easy"},
-        {"Word1": "basket", "Word2": "eight", "Word3": "snow", "corrAns": "ball", "Language": "en", "Difficulty": "easy"}
-    ],
-    "medium_en": [
-        {"Word1": "opera", "Word2": "hand", "Word3": "dish", "corrAns": "soap", "Language": "en", "Difficulty": "medium"},
-        {"Word1": "cat", "Word2": "number", "Word3": "phone", "corrAns": "call", "Language": "en", "Difficulty": "medium"},
-        {"Word1": "man", "Word2": "glue", "Word3": "star", "corrAns": "super", "Language": "en", "Difficulty": "medium"},
-        {"Word1": "cover", "Word2": "arm", "Word3": "wear", "corrAns": "under", "Language": "en", "Difficulty": "medium"}
-    ],
-    "hard_en": [
-        {"Word1": "spoon", "Word2": "cloth", "Word3": "card", "corrAns": "table", "Language": "en", "Difficulty": "hard"},
-        {"Word1": "pea", "Word2": "shell", "Word3": "chest", "corrAns": "nut", "Language": "en", "Difficulty": "hard"},
-        {"Word1": "wise", "Word2": "work", "Word3": "tower", "corrAns": "clock", "Language": "en", "Difficulty": "hard"},
-        {"Word1": "reading", "Word2": "service", "Word3": "stick", "corrAns": "lip", "Language": "en", "Difficulty": "hard"}
-    ],
-    "practice": [
-        {"Word1": "тропа", "Word2": "хвоя", "Word3": "зверь", "corrAns": "лес", "Language": "ru", "Difficulty": "easy"},
-        {"Word1": "лазурь", "Word2": "мир", "Word3": "облако", "corrAns": "небо", "Language": "ru", "Difficulty": "medium"},
-        {"Word1": "страна", "Word2": "общество", "Word3": "ответственность", "corrAns": "гражданин", "Language": "ru", "Difficulty": "hard"},
-        {"Word1": "cream", "Word2": "skate", "Word3": "water", "corrAns": "ice", "Language": "en", "Difficulty": "easy"},
-        {"Word1": "dream", "Word2": "break", "Word3": "light", "corrAns": "day", "Language": "en", "Difficulty": "medium"},
-        {"Word1": "tooth", "Word2": "potato", "Word3": "heart", "corrAns": "sweet", "Language": "en", "Difficulty": "hard"}
-    ]
+// ══════════════════════════════════════════
+// ДАННЫЕ ЗАДАЧ
+// ══════════════════════════════════════════
+var STIMULI = {
+  ru_easy:[
+    {Word1:'миллионер',Word2:'купюра',Word3:'сша',corrAns:'доллар'},
+    {Word1:'крем',Word2:'овал',Word3:'выражение',corrAns:'лицо'},
+    {Word1:'здоровье',Word2:'ритм',Word3:'приступ',corrAns:'сердце'},
+    {Word1:'ряд',Word2:'дробь',Word3:'последовательность',corrAns:'число'},
+  ],
+  ru_medium:[
+    {Word1:'рынок',Word2:'качество',Word3:'оказание',corrAns:'услуга'},
+    {Word1:'советник',Word2:'выборы',Word3:'республика',corrAns:'президент'},
+    {Word1:'школа',Word2:'буржуазия',Word3:'неравенство',corrAns:'класс'},
+    {Word1:'свежесть',Word2:'змей',Word3:'поток',corrAns:'воздух'},
+  ],
+  ru_hard:[
+    {Word1:'скорость',Word2:'направление',Word3:'траектория',corrAns:'движение'},
+    {Word1:'рецепт',Word2:'шкаф',Word3:'страница',corrAns:'книга'},
+    {Word1:'река',Word2:'линия',Word3:'море',corrAns:'берег'},
+    {Word1:'поведение',Word2:'иллюстрация',Word3:'образец',corrAns:'пример'},
+  ],
+  en_easy:[
+    {Word1:'dew',Word2:'comb',Word3:'bee',corrAns:'honey'},
+    {Word1:'worm',Word2:'shelf',Word3:'end',corrAns:'book'},
+    {Word1:'cadet',Word2:'capsule',Word3:'ship',corrAns:'space'},
+    {Word1:'basket',Word2:'eight',Word3:'snow',corrAns:'ball'},
+  ],
+  en_medium:[
+    {Word1:'opera',Word2:'hand',Word3:'dish',corrAns:'soap'},
+    {Word1:'cat',Word2:'number',Word3:'phone',corrAns:'call'},
+    {Word1:'man',Word2:'glue',Word3:'star',corrAns:'super'},
+    {Word1:'cover',Word2:'arm',Word3:'wear',corrAns:'under'},
+  ],
+  en_hard:[
+    {Word1:'spoon',Word2:'cloth',Word3:'card',corrAns:'table'},
+    {Word1:'pea',Word2:'shell',Word3:'chest',corrAns:'nut'},
+    {Word1:'wise',Word2:'work',Word3:'tower',corrAns:'clock'},
+    {Word1:'reading',Word2:'service',Word3:'stick',corrAns:'lip'},
+  ],
 };
 
-// ==================================================================
-// ФУНКЦИИ ДЛЯ COUNTERBALANCING
-// ==================================================================
+var PRACTICE=[
+  {Word1:'тропа',Word2:'хвоя',Word3:'зверь',corrAns:'лес',lang:'ru',diff:'easy'},
+  {Word1:'лазурь',Word2:'мир',Word3:'облако',corrAns:'небо',lang:'ru',diff:'medium'},
+  {Word1:'страна',Word2:'общество',Word3:'ответственность',corrAns:'гражданин',lang:'ru',diff:'hard'},
+  {Word1:'cream',Word2:'skate',Word3:'water',corrAns:'ice',lang:'en',diff:'easy'},
+  {Word1:'dream',Word2:'break',Word3:'light',corrAns:'day',lang:'en',diff:'medium'},
+  {Word1:'tooth',Word2:'potato',Word3:'heart',corrAns:'sweet',lang:'en',diff:'hard'},
+];
 
-function getBlocksOrder(group) {
-    const orders = {
-        1: ['ru_easy', 'ru_medium', 'ru_hard', 'en_easy', 'en_medium', 'en_hard'],
-        2: ['en_easy', 'en_medium', 'en_hard', 'ru_easy', 'ru_medium', 'ru_hard'],
-        3: ['ru_easy', 'en_easy', 'ru_medium', 'en_medium', 'ru_hard', 'en_hard'],
-        4: ['en_easy', 'ru_easy', 'en_medium', 'ru_medium', 'en_hard', 'ru_hard']
-    };
-    return orders[group];
+var BLOCK_ORDER={
+  1:['ru_easy','ru_medium','ru_hard','en_easy','en_medium','en_hard'],
+  2:['en_easy','en_medium','en_hard','ru_easy','ru_medium','ru_hard'],
+  3:['ru_easy','en_easy','ru_medium','en_medium','ru_hard','en_hard'],
+  4:['en_easy','ru_easy','en_medium','ru_medium','en_hard','ru_hard'],
+};
+
+var PRACTICE_ORDER={
+  1:[{l:'ru',d:'easy'},{l:'ru',d:'medium'},{l:'ru',d:'hard'},{l:'en',d:'easy'},{l:'en',d:'medium'},{l:'en',d:'hard'}],
+  2:[{l:'en',d:'easy'},{l:'en',d:'medium'},{l:'en',d:'hard'},{l:'ru',d:'easy'},{l:'ru',d:'medium'},{l:'ru',d:'hard'}],
+  3:[{l:'ru',d:'easy'},{l:'en',d:'easy'},{l:'ru',d:'medium'},{l:'en',d:'medium'},{l:'ru',d:'hard'},{l:'en',d:'hard'}],
+  4:[{l:'en',d:'easy'},{l:'ru',d:'easy'},{l:'en',d:'medium'},{l:'ru',d:'medium'},{l:'en',d:'hard'},{l:'ru',d:'hard'}],
+};
+
+// ══════════════════════════════════════════
+// СОСТОЯНИЕ
+// ══════════════════════════════════════════
+var P={};
+var GROUP=null;
+var RESULTS=[];
+var _resp='';
+var _rt=0;
+var _sliderVal=null;
+var _sliderKey=null;
+var _sliderPhase=null;
+var _pre={};
+var _post={};
+var _timerIv=null;
+
+// ══════════════════════════════════════════
+// GOOGLE SHEETS
+// ══════════════════════════════════════════
+var SHEETS_URL='https://script.google.com/macros/s/AKfycbxbHmn2J0WMIU4z7wgWugiuHNxVLzdBSSReXs-m9RQ431xtBS2sVEDEZE7QuxgtRiGGqQ/exec';
+function sendRow(row){
+  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(row)})
+    .catch(function(e){console.warn('Sheets:',e);});
 }
 
-function getPracticeOrder(group) {
-    const orders = {
-        1: [
-            {lang: 'ru', diff: 'easy'}, {lang: 'ru', diff: 'medium'}, {lang: 'ru', diff: 'hard'},
-            {lang: 'en', diff: 'easy'}, {lang: 'en', diff: 'medium'}, {lang: 'en', diff: 'hard'}
-        ],
-        2: [
-            {lang: 'en', diff: 'easy'}, {lang: 'en', diff: 'medium'}, {lang: 'en', diff: 'hard'},
-            {lang: 'ru', diff: 'easy'}, {lang: 'ru', diff: 'medium'}, {lang: 'ru', diff: 'hard'}
-        ],
-        3: [
-            {lang: 'ru', diff: 'easy'}, {lang: 'en', diff: 'easy'},
-            {lang: 'ru', diff: 'medium'}, {lang: 'en', diff: 'medium'},
-            {lang: 'ru', diff: 'hard'}, {lang: 'en', diff: 'hard'}
-        ],
-        4: [
-            {lang: 'en', diff: 'easy'}, {lang: 'ru', diff: 'easy'},
-            {lang: 'en', diff: 'medium'}, {lang: 'ru', diff: 'medium'},
-            {lang: 'en', diff: 'hard'}, {lang: 'ru', diff: 'hard'}
-        ]
-    };
-    return orders[group];
+// ══════════════════════════════════════════
+// ВСПОМОГАТЕЛЬНЫЕ
+// ══════════════════════════════════════════
+function S(html){return '<div class="S">'+html+'</div>';}
+function pad2(n){return n<10?'0'+n:''+n;}
+function blockLabel(key){
+  var lang=key.startsWith('ru')?'🇷🇺 Русский':'🇬🇧 English';
+  var diff=key.includes('easy')?'лёгкий (100–70%)':key.includes('medium')?'средний (69–30%)':'сложный (29–0%)';
+  return lang+' · '+diff;
 }
 
-// ==================================================================
-// ФУНКЦИЯ СОЗДАНИЯ ОДНОЙ ЗАДАЧИ CRA
-// ==================================================================
+// ══════════════════════════════════════════
+// СЛАЙДЕР
+// ══════════════════════════════════════════
+window._pickDot=function(n){
+  _sliderVal=n;
+  document.querySelectorAll('.sdot').forEach(function(d){
+    d.classList.toggle('on',parseInt(d.dataset.n)===n);
+  });
+  var btn=document.getElementById('slider-ok');
+  if(btn)btn.disabled=false;
+};
+window._confirmSlider=function(){
+  if(_sliderVal===null)return;
+  if(_sliderPhase==='pre')_pre[_sliderKey]=_sliderVal;
+  else _post[_sliderKey]=_sliderVal;
+  _sliderVal=null;
+  jsPsych.finishTrial();
+};
 
-function createCRATrial(taskData, blockKey, trialIndex, showFeedback = true) {
-    const trials = [];
-    
-    // 1. Показ задачи + ввод ответа
-    const taskTrial = {
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'html',
-                prompt: `<div class="cra-words">${taskData.Word1}&nbsp;&nbsp;&nbsp;&nbsp;${taskData.Word2}&nbsp;&nbsp;&nbsp;&nbsp;${taskData.Word3}</div>
-                         <div class="cra-prompt">Введите ответ (начальная форма, единственное число):</div>`
-            },
-            {
-                type: 'text',
-                prompt: '',
-                name: 'response',
-                required: true,
-                textbox_columns: 30
-            }
-        ]],
-        button_label_finish: 'Продолжить',
-        data: {
-            task_type: 'cra_response',
-            block: blockKey,
-            trial_index: trialIndex,
-            word1: taskData.Word1,
-            word2: taskData.Word2,
-            word3: taskData.Word3,
-            correct_answer: taskData.corrAns,
-            language: taskData.Language,
-            difficulty: taskData.Difficulty
-        },
-        on_finish: function(data) {
-            const response = data.response.response.trim().toLowerCase();
-            const correct = response === taskData.corrAns.toLowerCase();
-            data.user_response = response;
-            data.correct = correct;
-        }
-    };
-    trials.push(taskTrial);
-    
-    // 2-5. Опросники ДО обратной связи
-    const scaleOptions = ['1', '2', '3', '4', '5', '6', '7'];
-    
-    // Confidence
-    trials.push({
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'likert',
-                prompt: 'Насколько Вы уверены в своём ответе?',
-                name: 'confidence',
-                options: scaleOptions,
-                required: true,
-                labels: ['совсем не уверен', '', '', '', '', '', 'абсолютно уверен']
-            }
-        ]],
-        data: {
-            task_type: 'rating_confidence',
-            block: blockKey,
-            trial_index: trialIndex
-        },
-        on_finish: function(data) {
-            data.confidence = parseInt(data.response.confidence);
-        }
-    });
-    
-    // Insight
-    trials.push({
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'likert',
-                prompt: 'Насколько решение пришло как инсайт, озарение?<br>(1 - перебирал варианты, 7 - пришло само)',
-                name: 'insight',
-                options: scaleOptions,
-                required: true,
-                labels: ['перебирал варианты', '', '', '', '', '', 'пришло само']
-            }
-        ]],
-        data: {
-            task_type: 'rating_insight',
-            block: blockKey,
-            trial_index: trialIndex
-        },
-        on_finish: function(data) {
-            data.insight = parseInt(data.response.insight);
-        }
-    });
-    
-    // Suddenness
-    trials.push({
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'likert',
-                prompt: 'Насколько внезапно пришло решение?',
-                name: 'suddenness',
-                options: scaleOptions,
-                required: true,
-                labels: ['совсем не внезапно', '', '', '', '', '', 'очень внезапно']
-            }
-        ]],
-        data: {
-            task_type: 'rating_suddenness',
-            block: blockKey,
-            trial_index: trialIndex
-        },
-        on_finish: function(data) {
-            data.suddenness = parseInt(data.response.suddenness);
-        }
-    });
-    
-    // Pleasure
-    trials.push({
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'likert',
-                prompt: 'Насколько приятно было решать задачу?',
-                name: 'pleasure',
-                options: scaleOptions,
-                required: true,
-                labels: ['совсем неприятно', '', '', '', '', '', 'очень приятно']
-            }
-        ]],
-        data: {
-            task_type: 'rating_pleasure',
-            block: blockKey,
-            trial_index: trialIndex
-        },
-        on_finish: function(data) {
-            data.pleasure = parseInt(data.response.pleasure);
-        }
-    });
-    
-    // 6. Обратная связь (если нужна)
-    if (showFeedback) {
-        trials.push({
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: function() {
-                const lastResponse = jsPsych.data.get().filter({trial_index: jsPsych.getProgress().current_trial_global - 5}).values()[0];
-                const correct = lastResponse.correct;
-                const userAns = lastResponse.user_response;
-                const correctAns = taskData.corrAns;
-                
-                if (correct) {
-                    return `<div class="feedback correct">✓ Верно!</div>
-                            <div style="font-size: 24px;">Правильный ответ: ${correctAns}</div>`;
-                } else {
-                    return `<div class="feedback incorrect">✗ Неверно</div>
-                            <div style="font-size: 24px;">Ваш ответ: ${userAns}</div>
-                            <div style="font-size: 24px;">Правильный ответ: ${correctAns}</div>`;
-                }
-            },
-            choices: "NO_KEYS",
-            trial_duration: 1500,
-            data: {
-                task_type: 'feedback',
-                block: blockKey,
-                trial_index: trialIndex
-            }
-        });
-    }
-    
-    // 7-9. Опросники ПОСЛЕ обратной связи
-    
-    // Surprise
-    trials.push({
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'likert',
-                prompt: 'Насколько удивил правильный ответ?',
-                name: 'surprise',
-                options: scaleOptions,
-                required: true,
-                labels: ['совсем не удивил', '', '', '', '', '', 'сильно удивил']
-            }
-        ]],
-        data: {
-            task_type: 'rating_surprise',
-            block: blockKey,
-            trial_index: trialIndex
-        },
-        on_finish: function(data) {
-            data.surprise = parseInt(data.response.surprise);
-        }
-    });
-    
-    // Relief
-    trials.push({
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'likert',
-                prompt: 'Насколько сильное облегчение после решения?',
-                name: 'relief',
-                options: scaleOptions,
-                required: true,
-                labels: ['нет облегчения', '', '', '', '', '', 'сильное облегчение']
-            }
-        ]],
-        data: {
-            task_type: 'rating_relief',
-            block: blockKey,
-            trial_index: trialIndex
-        },
-        on_finish: function(data) {
-            data.relief = parseInt(data.response.relief);
-        }
-    });
-    
-    // Motivation
-    trials.push({
-        type: jsPsychSurvey,
-        pages: [[
-            {
-                type: 'likert',
-                prompt: 'Насколько мотивированы решать следующую задачу?',
-                name: 'motivation',
-                options: scaleOptions,
-                required: true,
-                labels: ['совсем не мотивирован', '', '', '', '', '', 'сильно мотивирован']
-            }
-        ]],
-        data: {
-            task_type: 'rating_motivation',
-            block: blockKey,
-            trial_index: trialIndex
-        },
-        on_finish: function(data) {
-            data.motivation = parseInt(data.response.motivation);
-        }
-    });
-    
-    return trials;
+function sliderTrial(key,question,low,high,phase){
+  var dots=[1,2,3,4,5,6,7].map(function(n){
+    return '<button class="sdot" data-n="'+n+'" onclick="_pickDot('+n+')">'+n+'</button>';
+  }).join('');
+  return {
+    type:'html-keyboard-response',
+    stimulus:S(
+      '<div class="label">Оцените по шкале 1–7</div>'+
+      '<div class="slider-q">'+question+'</div>'+
+      '<div class="slider-wrap">'+
+        '<div class="slider-track">'+dots+'</div>'+
+        '<div class="slider-labels"><span>'+low+'</span><span>'+high+'</span></div>'+
+      '</div>'+
+      '<button class="btn" id="slider-ok" onclick="_confirmSlider()" disabled>Подтвердить</button>'
+    ),
+    choices:jsPsych.NO_KEYS,
+    on_load:function(){_sliderVal=null;_sliderKey=key;_sliderPhase=phase;},
+  };
 }
 
-// ==================================================================
-// ОСНОВНОЙ КОД ЭКСПЕРИМЕНТА
-// ==================================================================
+// ══════════════════════════════════════════
+// ВВОД ОТВЕТА
+// ══════════════════════════════════════════
+window._submitAnswer=function(){
+  var inp=document.getElementById('cra-input');
+  if(!inp)return;
+  var val=inp.value.trim().toLowerCase();
+  if(!val){inp.focus();return;}
+  if(_timerIv){clearInterval(_timerIv);_timerIv=null;}
+  _resp=val;
+  jsPsych.finishTrial();
+};
 
-// Инициализация jsPsych
-const jsPsych = initJsPsych({
-    on_finish: function() {
-        // Сохранение данных
-        const data = jsPsych.data.get();
-        const csv = data.csv();
-        
-        // Скачивание CSV
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `cra_results_${Date.now()}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Показ завершения
-        jsPsych.getDisplayElement().innerHTML = `
-            <div style="text-align: center; font-size: 28px; margin-top: 100px;">
-                <h1>Спасибо за участие!</h1>
-                <p>Данные сохранены автоматически.</p>
-                <p>Вы можете закрыть эту страницу.</p>
-            </div>
-        `;
-    }
-});
+// ══════════════════════════════════════════
+// ОДИН ТРИАЛ
+// ══════════════════════════════════════════
+function makeTrial(row,blockKey,isPractice){
+  var trials=[];
+  var t0;
 
-// Сбор информации об участнике
-const participantInfo = {
-    type: jsPsychSurvey,
-    pages: [
-        [
-            {
-                type: 'text',
-                prompt: 'Возраст:',
-                name: 'age',
-                required: true
-            },
-            {
-                type: 'multi-choice',
-                prompt: 'Пол:',
-                name: 'gender',
-                options: ['М', 'Ж'],
-                required: true
-            },
-            {
-                type: 'multi-choice',
-                prompt: 'Уровень английского (B2-C2):',
-                name: 'english_level',
-                options: ['B2', 'C1', 'C2'],
-                required: true
-            }
-        ],
-        [
-            {
-                type: 'multi-choice',
-                prompt: 'Студент РАНХиГС?',
-                name: 'is_student',
-                options: ['Да', 'Нет'],
-                required: true
-            }
-        ]
-    ],
-    button_label_next: 'Далее',
-    button_label_finish: 'Начать эксперимент',
-    data: {
-        task_type: 'participant_info'
+  // 1. Ввод
+  trials.push({
+    type:'html-keyboard-response',
+    stimulus:S(
+      '<div class="trial-words">'+
+        '<div class="word-box">'+row.Word1+'</div>'+
+        '<div class="word-sep">·</div>'+
+        '<div class="word-box">'+row.Word2+'</div>'+
+        '<div class="word-sep">·</div>'+
+        '<div class="word-box">'+row.Word3+'</div>'+
+      '</div>'+
+      '<div class="input-wrap">'+
+        '<div class="input-label">Введите ответ — начальная форма, ед. число</div>'+
+        '<input id="cra-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="ваш ответ…">'+
+        '<div style="font-family:var(--mono);font-size:11px;color:var(--muted)">нажмите Enter или кнопку ниже</div>'+
+      '</div>'+
+      '<button class="btn" onclick="_submitAnswer()">Ответить →</button>'+
+      '<div class="timer" id="cra-timer">⏱ 0.0 с</div>'
+    ),
+    choices:jsPsych.NO_KEYS,
+    on_load:function(){
+      _resp='';_rt=0;
+      t0=performance.now();
+      var inp=document.getElementById('cra-input');
+      if(inp){
+        inp.focus();
+        inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();window._submitAnswer();}});
+      }
+      _timerIv=setInterval(function(){
+        var el=document.getElementById('cra-timer');
+        if(!el){clearInterval(_timerIv);return;}
+        el.textContent='⏱ '+((performance.now()-t0)/1000).toFixed(1)+' с';
+      },100);
     },
-    on_finish: function(data) {
-        // Случайное определение группы
-        const group = Math.floor(Math.random() * 4) + 1;
-        data.group = group;
-        jsPsych.data.addProperties({ group: group });
-        
-        // Сохраняем всю информацию
-        jsPsych.data.addProperties({
-            participant_age: data.response.age,
-            participant_gender: data.response.gender,
-            participant_english: data.response.english_level,
-            participant_student: data.response.is_student,
-            timestamp: new Date().toISOString()
-        });
-        
-        console.log('Группа участника:', group);
-    }
-};
+    on_finish:function(){_rt=parseFloat(((performance.now()-t0)/1000).toFixed(3));},
+  });
 
-// Инструкции
-const instructions = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: `
-        <div class="instructions">
-            <h1 style="text-align: center;">Добро пожаловать в эксперимент!</h1>
-            
-            <p>Вам будут показаны три слова, которые связаны между собой общим словом-ответом.</p>
-            
-            <p><strong>Ваша задача:</strong> найти четвертое слово, которое образует устойчивое словосочетание 
-            или составное слово с каждым из трех слов.</p>
-            
-            <p><strong>Пример (русский):</strong><br>
-            тропа / хвоя / зверь → <strong>лес</strong><br>
-            (лесная тропа, хвойный лес, лесной зверь)</p>
-            
-            <p><strong>Пример (английский):</strong><br>
-            cream / skate / water → <strong>ice</strong><br>
-            (ice cream, ice skate, ice water)</p>
-            
-            <p><strong>Важно:</strong></p>
-            <ul>
-                <li>Вводите ответ в <strong>начальной форме, единственном числе</strong></li>
-                <li>После ввода нажмите Enter или кнопку "Продолжить"</li>
-                <li>После каждого ответа будет несколько вопросов по шкале 1-7</li>
-            </ul>
-            
-            <p>Сначала будут тренировочные задания, затем основная часть.</p>
-            
-            <p style="text-align: center; font-size: 24px; margin-top: 40px;">
-                <strong>Нажмите ПРОБЕЛ для продолжения</strong>
-            </p>
-        </div>
-    `,
-    choices: [' ']
-};
+  // 2-5. Шкалы ДО обратной связи
+  trials.push(sliderTrial('Confidence','Насколько вы <strong>уверены</strong> в своём ответе?','совсем не уверен','абсолютно уверен','pre'));
+  trials.push(sliderTrial('Insight','Насколько решение пришло как <strong>инсайт, озарение</strong>?<br><small style="color:var(--muted);font-size:13px;">(1 — перебирал варианты, 7 — пришло само)</small>','перебирал','пришло само','pre'));
+  trials.push(sliderTrial('Suddenness','Насколько <strong>внезапно</strong> пришло решение?','совсем не внезапно','очень внезапно','pre'));
+  trials.push(sliderTrial('Pleasure','Насколько <strong>приятно</strong> было решать задачу?','совсем неприятно','очень приятно','pre'));
 
-// Создание timeline
-let timeline = [];
+  // 6. Обратная связь
+  trials.push({
+    type:'html-keyboard-response',
+    stimulus:function(){
+      var correct=_resp===row.corrAns.toLowerCase();
+      return S(
+        '<div class="feedback-box '+(correct?'ok':'bad')+'">'+
+          '<div class="feedback-icon">'+(correct?'✓':'✗')+'</div>'+
+          '<div>'+(correct?'Верно!':'Неверно.')+' Правильный ответ: <strong>'+row.corrAns+'</strong></div>'+
+          (!correct&&_resp?'<div style="color:var(--muted);margin-top:8px;font-size:13px;">Ваш ответ: '+_resp+'</div>':'')+
+        '</div>'+
+        '<p class="hint">нажмите ПРОБЕЛ, чтобы продолжить</p>'
+      );
+    },
+    choices:[' '],
+  });
 
-timeline.push(participantInfo);
-timeline.push(instructions);
+  // 7-9. Шкалы ПОСЛЕ обратной связи
+  trials.push(sliderTrial('Surprise','Насколько вас <strong>удивил</strong> правильный ответ?','совсем не удивил','сильно удивил','post'));
+  trials.push(sliderTrial('Relief','Насколько <strong>сильное облегчение</strong> после решения?','нет облегчения','сильное облегчение','post'));
+  trials.push(sliderTrial('Motivation','Насколько вы <strong>мотивированы</strong> решать следующую задачу?','совсем не мотивирован','сильно мотивирован','post'));
 
-// Тренировочные задания
-timeline.push({
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<div class="block-message">Тренировочные задания</div><p style="text-align:center; font-size:20px;">Нажмите ПРОБЕЛ</p>',
-    choices: [' ']
-});
+  // 10. Сохранение
+  trials.push({
+    type:'html-keyboard-response',
+    stimulus:S('<div class="label" style="color:var(--muted)">сохранение…</div>'),
+    choices:jsPsych.NO_KEYS,
+    trial_duration:350,
+    on_finish:function(){
+      if(!isPractice){
+        var result={
+          Age:P.age,Gender:P.gender,EnglishLevel:P.eng_level,
+          Group:GROUP,IsStudent:P.is_student,StudentRow:P.student_row||'',
+          Block:blockKey,
+          Word1:row.Word1,Word2:row.Word2,Word3:row.Word3,
+          CorrectAnswer:row.corrAns,
+          UserResponse:_resp,
+          Correct:_resp===row.corrAns.toLowerCase(),
+          RT_sec:_rt,
+          Confidence:_pre.Confidence,Insight:_pre.Insight,
+          Suddenness:_pre.Suddenness,Pleasure:_pre.Pleasure,
+          Surprise:_post.Surprise,Relief:_post.Relief,
+          Motivation:_post.Motivation,
+          Timestamp:new Date().toISOString(),
+        };
+        RESULTS.push(result);
+        sendRow(result);
+      }
+      _pre={};_post={};
+    },
+  });
 
-// Получаем группу и создаем порядок практики
-const getPracticeTrials = function() {
-    const group = jsPsych.data.get().filter({task_type: 'participant_info'}).values()[0].group;
-    const practiceOrder = getPracticeOrder(group);
-    const practiceTrials = [];
-    
-    practiceOrder.forEach((spec, idx) => {
-        const task = TASKS_DATA.practice.find(t => 
-            t.Language === spec.lang && t.Difficulty === spec.diff
-        );
-        if (task) {
-            const trials = createCRATrial(task, 'practice', idx, true);
-            practiceTrials.push(...trials);
-        }
-    });
-    
-    return practiceTrials;
-};
+  return trials;
+}
 
-timeline.push({
-    timeline: getPracticeTrials,
-    conditional_function: function() {
-        return true;
-    }
-});
+// ══════════════════════════════════════════
+// ПОСТРОЕНИЕ ТАЙМЛАЙНА
+// ══════════════════════════════════════════
+function buildTimeline(){
+  GROUP=Math.floor(Math.random()*4)+1;
+  var tl=[];
 
-// Переход к основной части
-timeline.push({
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<div class="instructions"><h2 style="text-align:center;">Тренировка окончена</h2><p style="text-align:center; font-size:20px;">Сейчас начинается основная часть.<br><br>Нажмите ПРОБЕЛ</p></div>',
-    choices: [' ']
-});
+  // Приветствие
+  tl.push({
+    type:'html-keyboard-response',
+    stimulus:S(
+      '<div class="label">Исследование CRA</div>'+
+      '<h1 class="heading">Задачи на составные<br>отдалённые ассоциации</h1>'+
+      '<p class="body-text">Вам будут показаны <strong>три слова</strong>, связанных одним общим словом.<br>'+
+      'Введите его в <strong>начальной форме, единственном числе</strong>.</p>'+
+      '<p class="hint">нажмите ПРОБЕЛ, чтобы начать</p>'
+    ),
+    choices:[' '],
+  });
 
-// Основные блоки
-const getMainBlocks = function() {
-    const group = jsPsych.data.get().filter({task_type: 'participant_info'}).values()[0].group;
-    const blocksOrder = getBlocksOrder(group);
-    const allBlockTrials = [];
-    
-    blocksOrder.forEach((blockKey, blockIdx) => {
-        // Сообщение о блоке
-        const lang = blockKey.includes('ru') ? 'Русский' : 'Английский';
-        let percent = '';
-        if (blockKey.includes('easy')) percent = '100%-70%';
-        else if (blockKey.includes('medium')) percent = '69%-30%';
-        else percent = '29%-0%';
-        
-        allBlockTrials.push({
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: `<div class="block-message">Блок ${blockIdx + 1}: ${lang} (${percent})</div>`,
-            choices: "NO_KEYS",
-            trial_duration: 2000
-        });
-        
+  // Анкета 1
+  tl.push({
+    type:'survey-html-form',
+    html:S(
+      '<div class="label">Шаг 1 из 2 · Информация об участнике</div>'+
+      '<div class="form-grid">'+
+        '<div class="form-field"><label>Возраст</label><input type="number" name="age" min="16" max="80" required placeholder="например, 22"></div>'+
+        '<div class="form-field"><label>Пол</label><select name="gender" required><option value="">— выберите —</option><option value="М">М</option><option value="Ж">Ж</option></select></div>'+
+        '<div class="form-field"><label>Уровень английского</label><select name="eng_level" required><option value="">— выберите —</option><option value="B2">B2</option><option value="C1">C1</option><option value="C2">C2</option></select></div>'+
+      '</div>'
+    ),
+    button_label:'Продолжить →',
+    on_finish:function(data){
+      P.age=data.responses.age;
+      P.gender=data.responses.gender;
+      P.eng_level=data.responses.eng_level;
+    },
+  });
+
+  // Анкета 2 — студент + условное поле для строки
+  tl.push({
+    type:'survey-html-form',
+    html:S(
+      '<div class="label">Шаг 2 из 2 · Статус студента</div>'+
+      '<div class="form-grid">'+
+        '<div class="form-field">'+
+          '<label>Вы студент РАНХиГС?</label>'+
+          '<select name="is_student" id="stud_sel" required onchange="_toggleRow(this.value)">'+
+            '<option value="">— выберите —</option>'+
+            '<option value="Да">Да</option>'+
+            '<option value="Нет">Нет</option>'+
+          '</select>'+
+        '</div>'+
+        '<div class="form-field" id="row_field" style="display:none">'+
+          '<label>Номер вашей строки в таблице (для доп. баллов)</label>'+
+          '<input type="text" name="student_row" id="stud_row_inp" placeholder="например, 15">'+
+        '</div>'+
+      '</div>'
+    ),
+    button_label:'Начать эксперимент →',
+    on_finish:function(data){
+      P.is_student=data.responses.is_student;
+      P.student_row=data.responses.student_row||'';
+    },
+  });
+
+  // Инструкция
+  tl.push({
+    type:'html-keyboard-response',
+    stimulus:S(
+      '<div class="label">Инструкция</div>'+
+      '<h2 class="heading">Как проходит эксперимент</h2>'+
+      '<div class="body-text" style="text-align:left;max-width:540px;">'+
+        '<p>1. На экране — <strong>три слова</strong>.</p><br>'+
+        '<p>2. Найдите <strong>одно слово</strong>, связанное со всеми тремя.</p><br>'+
+        '<p>3. Введите его в <strong>начальной форме, ед. числе</strong> и нажмите <strong>Enter</strong>.</p><br>'+
+        '<p>4. После каждого задания — <strong>7 коротких вопросов</strong> (шкала 1–7).</p><br>'+
+        '<p>5. Сначала — <strong>6 тренировочных заданий</strong> с обратной связью.</p>'+
+      '</div>'+
+      '<p class="hint">нажмите ПРОБЕЛ, чтобы перейти к тренировке</p>'
+    ),
+    choices:[' '],
+  });
+
+  // Шапка тренировки
+  tl.push({
+    type:'html-keyboard-response',
+    stimulus:S(
+      '<div class="block-tag">Тренировка</div>'+
+      '<div class="heading">6 тренировочных заданий</div>'+
+      '<p class="body-text">После каждой задачи вы увидите правильный ответ.<br>Тренировочные данные не сохраняются.</p>'+
+      '<p class="hint">нажмите ПРОБЕЛ, чтобы начать</p>'
+    ),
+    choices:[' '],
+  });
+
+  // Тренировочные задания (все 4 группы, условно)
+  for(var g=1;g<=4;g++){
+    (function(grp){
+      var order=PRACTICE_ORDER[grp];
+      order.forEach(function(spec,i){
+        var row=PRACTICE.find(function(p){return p.lang===spec.l&&p.diff===spec.d;});
+        if(!row)return;
+        (function(idx){
+          var steps=[{
+            type:'html-keyboard-response',
+            stimulus:S(
+              '<div class="block-num">0'+(idx+1)+'</div>'+
+              '<div class="label">Тренировочное задание '+(idx+1)+' из 6</div>'+
+              '<p class="hint">нажмите ПРОБЕЛ, чтобы начать</p>'
+            ),
+            choices:[' '],
+            conditional_function:function(){return GROUP===grp;},
+          }].concat(makeTrial(row,'practice',true));
+          tl.push({
+            timeline:steps,
+            conditional_function:(function(gg){return function(){return GROUP===gg;};})(grp),
+          });
+        })(i);
+      });
+    })(g);
+  }
+
+  // Переход к основной части
+  tl.push({
+    type:'html-keyboard-response',
+    stimulus:S(
+      '<div class="block-tag">Основная часть</div>'+
+      '<div class="heading">Тренировка завершена</div>'+
+      '<p class="body-text">Начинается основная часть эксперимента.<br>Отвечайте как можно точнее и быстрее.</p>'+
+      '<p class="hint">нажмите ПРОБЕЛ, чтобы начать</p>'
+    ),
+    choices:[' '],
+  });
+
+  // Основные блоки (все 4 группы, условно)
+  for(var g2=1;g2<=4;g2++){
+    (function(grp){
+      var blockOrder=BLOCK_ORDER[grp];
+      blockOrder.forEach(function(blockKey,bi){
+        var rows=STIMULI[blockKey];
+        var steps=[];
+
+        // Заголовок блока
+        steps.push((function(bk,bidx){return {
+          type:'html-keyboard-response',
+          stimulus:S(
+            '<div class="block-num">'+pad2(bidx+1)+'</div>'+
+            '<div class="block-tag">Блок '+(bidx+1)+' из 6</div>'+
+            '<div class="heading">'+blockLabel(bk)+'</div>'+
+            '<div class="progress-bar"><div class="progress-fill" style="width:'+Math.round(bidx/6*100)+'%"></div></div>'+
+            '<p class="hint">нажмите ПРОБЕЛ, чтобы начать блок</p>'
+          ),
+          choices:[' '],
+        };})(blockKey,bi));
+
         // Задачи блока
-        const blockTasks = TASKS_DATA[blockKey];
-        blockTasks.forEach((task, taskIdx) => {
-            const trials = createCRATrial(task, blockKey, taskIdx, true);
-            allBlockTrials.push(...trials);
+        rows.forEach(function(row,ti){
+          var counter={
+            type:'html-keyboard-response',
+            stimulus:S(
+              '<div class="block-num">'+pad2(ti+1)+'</div>'+
+              '<div class="label">Задача '+(ti+1)+' из '+rows.length+' · Блок '+(bi+1)+'</div>'+
+              '<p class="hint">нажмите ПРОБЕЛ, чтобы начать</p>'
+            ),
+            choices:[' '],
+          };
+          steps=steps.concat([counter]).concat(makeTrial(row,blockKey,false));
         });
-    });
-    
-    return allBlockTrials;
+
+        tl.push({
+          timeline:steps,
+          conditional_function:(function(gg){return function(){return GROUP===gg;};})(grp),
+        });
+      });
+    })(g2);
+  }
+
+  // Финал
+  tl.push({
+    type:'html-keyboard-response',
+    stimulus:S(
+      '<div class="block-tag">Завершено</div>'+
+      '<h2 class="heading">Большое спасибо<br>за участие!</h2>'+
+      '<p class="body-text">Ваши данные автоматически отправлены. ✅<br>Вы можете закрыть эту страницу.</p>'+
+      '<p class="hint">нажмите ПРОБЕЛ</p>'
+    ),
+    choices:[' '],
+    on_finish:function(){downloadCSV();},
+  });
+
+  return tl;
+}
+
+// ══════════════════════════════════════════
+// CSV (резервная копия)
+// ══════════════════════════════════════════
+function downloadCSV(){
+  if(!RESULTS.length)return;
+  var keys=Object.keys(RESULTS[0]);
+  var rows=[keys.join(',')].concat(RESULTS.map(function(r){
+    return keys.map(function(k){
+      var v=r[k]==null?'':String(r[k]);
+      return(v.indexOf(',')>=0||v.indexOf('"')>=0)?'"'+v.replace(/"/g,'""')+'"':v;
+    }).join(',');
+  }));
+  var blob=new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='CRA_'+(P.age||'?')+'_'+(P.gender||'?')+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+// ══════════════════════════════════════════
+// ПОКАЗ/СКРЫТИЕ ПОЛЯ СТРОКИ СТУДЕНТА
+// ══════════════════════════════════════════
+window._toggleRow=function(val){
+  var field=document.getElementById('row_field');
+  var inp=document.getElementById('stud_row_inp');
+  if(!field)return;
+  if(val==='Да'){
+    field.style.display='';
+    if(inp)inp.required=true;
+  } else {
+    field.style.display='none';
+    if(inp){inp.required=false;inp.value='';}
+  }
 };
 
-timeline.push({
-    timeline: getMainBlocks,
-    conditional_function: function() {
-        return true;
-    }
+// ══════════════════════════════════════════
+// СТАРТ
+// ══════════════════════════════════════════
+jsPsych.init({
+  display_element:'exp',
+  timeline:buildTimeline(),
+  on_finish:function(){downloadCSV();},
 });
-
-// Завершение
-timeline.push({
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: `
-        <div style="text-align: center; font-size: 28px; margin-top: 100px;">
-            <h1>Эксперимент окончен!</h1>
-            <p>Спасибо за участие!</p>
-            <p style="font-size: 20px; margin-top: 40px;">Нажмите ПРОБЕЛ для завершения</p>
-        </div>
-    `,
-    choices: [' ']
-});
-
-// Запуск эксперимента
-jsPsych.run(timeline);
-
 </script>
+</body>
 </html>
